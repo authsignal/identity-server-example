@@ -1,3 +1,4 @@
+using Authsignal;
 using Serilog;
 
 namespace IdentityServer;
@@ -18,6 +19,13 @@ internal static class HostingExtensions
         .AddInMemoryApiScopes(Config.ApiScopes)
         .AddInMemoryClients(Config.Clients)
         .AddTestUsers(TestUsers.Users);
+
+    builder.Configuration.AddJsonFile("appsettings.json");
+
+    var baseAddress = builder.Configuration.GetValue<string>("AuthsignalUrl");
+    var secret = builder.Configuration.GetValue<string>("AuthsignalSecret");
+
+    builder.Services.AddSingleton<IAuthsignalClient>(_ => new AuthsignalClient(secret, baseAddress: baseAddress));
 
     return builder.Build();
   }

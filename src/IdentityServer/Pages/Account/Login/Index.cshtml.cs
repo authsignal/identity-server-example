@@ -1,3 +1,4 @@
+using System.Text;
 using Authsignal;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
@@ -21,12 +22,7 @@ public class Index : PageModel
   private readonly IEventService _events;
   private readonly IAuthenticationSchemeProvider _schemeProvider;
   private readonly IIdentityProviderStore _identityProviderStore;
-
-  private readonly AuthsignalClient authsignal = new(
-    "UcPsFXS81O3k3xMv9/XBQsjXRc2otwnZ5qGC6jS2DoW6QwXX5FHi0A==",
-    "https://localhost:5001",
-    "https://dev-signal.authsignal.com/v1/"
-    );
+  private readonly IAuthsignalClient _authsignal;
 
   public ViewModel View { get; set; }
 
@@ -38,6 +34,7 @@ public class Index : PageModel
       IAuthenticationSchemeProvider schemeProvider,
       IIdentityProviderStore identityProviderStore,
       IEventService events,
+       IAuthsignalClient authsignal,
       TestUserStore users = null)
   {
     // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
@@ -47,6 +44,7 @@ public class Index : PageModel
     _schemeProvider = schemeProvider;
     _identityProviderStore = identityProviderStore;
     _events = events;
+    _authsignal = authsignal;
   }
 
   public async Task<IActionResult> OnGet(string returnUrl)
@@ -101,11 +99,21 @@ public class Index : PageModel
       {
         var user = _users.FindByUsername(Input.Username);
 
-        var trackRequest = new TrackRequest(UserId: user.SubjectId, Action: "identity-server-login");
+        var encodedReturnUrl = Convert.ToBase64String(Encoding.UTF8.GetBytes(Input.ReturnUrl));
 
-        var trackResponse = await authsignal.Track(trackRequest);
+        var redirectUrl = "https://localhost:5001/Account/Login/Callback?returnUrl=" + encodedReturnUrl;
 
-        if (trackResponse.State == UserActionState.CHALLENGE_REQUIRED)
+        var trackRequest = new TrackRequest(
+          UserId: user.SubjectId,
+          Username: user.Username,
+          Action: "identity-server-login",
+          RedirectUrl: redirectUrl
+        );
+
+        var trackResponse = await _authsignal.Track(trackRequest);
+
+
+        if (!trackResponse.IsEnrolled || trackResponse.State == UserActionState.CHALLENGE_REQUIRED)
         {
           return Redirect(trackResponse.Url);
         }

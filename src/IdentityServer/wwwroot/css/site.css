@@ -37,3 +37,7 @@
 .grants-page .card label {
   font-weight: bold;
 }
+
+.form-group .spaced {
+  margin-top: 20px important!;
+}

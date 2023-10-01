@@ -1,4 +1,5 @@
-﻿using Duende.IdentityServer;
+﻿using Authsignal;
+using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 
 namespace IdentityServer;

@@ -12,23 +12,23 @@ namespace IdentityServer;
 
 public class TestUsers
 {
-    public static List<TestUser> Users
+  public static List<TestUser> Users
+  {
+    get
     {
-        get
-        {
-            var address = new
-            {
-                street_address = "One Hacker Way",
-                locality = "Heidelberg",
-                postal_code = 69118,
-                country = "Germany"
-            };
-                
-            return new List<TestUser>
+      var address = new
+      {
+        street_address = "One Hacker Way",
+        locality = "Heidelberg",
+        postal_code = 69118,
+        country = "Germany"
+      };
+
+      return new List<TestUser>
             {
                 new TestUser
                 {
-                    SubjectId = "1",
+                    SubjectId = "a5a0c16c-0027-4011-8e2f-a7e179dc784b",
                     Username = "alice",
                     Password = "alice",
                     Claims =
@@ -44,7 +44,7 @@ public class TestUsers
                 },
                 new TestUser
                 {
-                    SubjectId = "2",
+                    SubjectId = "9222ac7a-06f4-4dbe-9bbc-1e5800f51900",
                     Username = "bob",
                     Password = "bob",
                     Claims =
@@ -59,6 +59,6 @@ public class TestUsers
                     }
                 }
             };
-        }
     }
+  }
 }

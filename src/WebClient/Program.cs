@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using Authsignal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,13 @@ builder.Services.AddAuthentication(options =>
 
       options.SaveTokens = true;
     });
+
+builder.Configuration.AddJsonFile("appsettings.json");
+
+var baseAddress = builder.Configuration.GetValue<string>("AuthsignalUrl");
+var secret = builder.Configuration.GetValue<string>("AuthsignalSecret");
+
+builder.Services.AddSingleton<IAuthsignalClient>(_ => new AuthsignalClient(secret, baseAddress: baseAddress));
 
 var app = builder.Build();
 
