@@ -1,6 +1,6 @@
 # Authsignal + IdentityServer Example
 
-[https://docs.authsignal.com/integrations/identityserver](https://docs.authsignal.com/integrations/identityserver)
+[Go here for the official integration guide on our docs site](https://docs.authsignal.com/integrations/identityserver)
 
 ## Overview
 
