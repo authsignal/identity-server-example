@@ -46,7 +46,7 @@ public class Callback : PageModel
 
     var context = await _interaction.GetAuthorizationContextAsync(decodedReturnUrl);
 
-    var validateChallengeRequest = new ValidateChallengeRequest(null, token);
+    var validateChallengeRequest = new ValidateChallengeRequest(token);
 
     var validateChallengeResponse = await _authsignal.ValidateChallenge(validateChallengeRequest);
 
