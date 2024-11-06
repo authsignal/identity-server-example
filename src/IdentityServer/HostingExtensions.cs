@@ -22,10 +22,10 @@ internal static class HostingExtensions
 
     builder.Configuration.AddJsonFile("appsettings.json");
 
-    var baseAddress = builder.Configuration.GetValue<string>("AuthsignalUrl");
+    var baseUrl = builder.Configuration.GetValue<string>("AuthsignalUrl");
     var secret = builder.Configuration.GetValue<string>("AuthsignalSecret");
 
-    builder.Services.AddSingleton<IAuthsignalClient>(_ => new AuthsignalClient(secret, baseAddress: baseAddress));
+    builder.Services.AddSingleton<IAuthsignalClient>(_ => new AuthsignalClient(secret, baseUrl: baseUrl));
 
     return builder.Build();
   }
