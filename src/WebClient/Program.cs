@@ -31,10 +31,10 @@ builder.Services.AddAuthentication(options =>
 
 builder.Configuration.AddJsonFile("appsettings.json");
 
-var baseUrl = builder.Configuration.GetValue<string>("AuthsignalUrl");
-var secret = builder.Configuration.GetValue<string>("AuthsignalSecret");
+var apiSecretKey = builder.Configuration.GetValue<string>("AuthsignalSecret")!;
+var apiUrl = builder.Configuration.GetValue<string>("AuthsignalUrl");
 
-builder.Services.AddSingleton<IAuthsignalClient>(_ => new AuthsignalClient(secret, baseUrl: baseUrl));
+builder.Services.AddSingleton<IAuthsignalClient>(_ => new AuthsignalClient(apiSecretKey: apiSecretKey, apiUrl: apiUrl));
 
 var app = builder.Build();
 

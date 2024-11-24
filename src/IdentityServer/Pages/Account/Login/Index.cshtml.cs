@@ -105,9 +105,11 @@ public class Index : PageModel
 
         var trackRequest = new TrackRequest(
           UserId: user.SubjectId,
-          Username: user.Username,
           Action: "identity-server-login",
-          RedirectUrl: redirectUrl
+          Attributes: new TrackAttributes(
+            Username: user.Username,
+             RedirectUrl: redirectUrl
+          )
         );
 
         var trackResponse = await _authsignal.Track(trackRequest);
