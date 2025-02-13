@@ -108,12 +108,12 @@ public class Index : PageModel
           Action: "identity-server-login",
           Attributes: new TrackAttributes(
             Username: user.Username,
-             RedirectUrl: redirectUrl
+            RedirectUrl: redirectUrl,
+            Email: user.Claims.First(x => x.Type == "email").Value
           )
         );
 
         var trackResponse = await _authsignal.Track(trackRequest);
-
 
         if (!trackResponse.IsEnrolled || trackResponse.State == UserActionState.CHALLENGE_REQUIRED)
         {
@@ -132,15 +132,15 @@ public class Index : PageModel
             IsPersistent = true,
             ExpiresUtc = DateTimeOffset.UtcNow.Add(LoginOptions.RememberMeLoginDuration)
           };
-        };
+        }
 
         // issue authentication cookie with subject ID and username
-        var isuser = new IdentityServerUser(user.SubjectId)
+        var isUser = new IdentityServerUser(user.SubjectId)
         {
           DisplayName = user.Username
         };
 
-        await HttpContext.SignInAsync(isuser, props);
+        await HttpContext.SignInAsync(isUser, props);
 
         if (context != null)
         {
@@ -218,14 +218,14 @@ public class Index : PageModel
           AuthenticationScheme = x.Name
         }).ToList();
 
-    var dyanmicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
+    var dynamicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
         .Where(x => x.Enabled)
         .Select(x => new ViewModel.ExternalProvider
         {
           AuthenticationScheme = x.Scheme,
           DisplayName = x.DisplayName
         });
-    providers.AddRange(dyanmicSchemes);
+    providers.AddRange(dynamicSchemes);
 
 
     var allowLocal = true;
