@@ -1,3 +1,5 @@
+<img width="1070" alt="Authsignal" src="https://raw.githubusercontent.com/authsignal/identity-server-example/main/.github/images/authsignal.png">
+
 # Authsignal + IdentityServer Example
 
 [Go here for the official integration guide on our docs site](https://docs.authsignal.com/integrations/identityserver)
