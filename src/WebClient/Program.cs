@@ -3,6 +3,11 @@ using Authsignal;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Kestrel to use specific ports
+builder.WebHost.ConfigureKestrel(options => {
+    options.ListenLocalhost(5002, opts => opts.UseHttps());
+});
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 

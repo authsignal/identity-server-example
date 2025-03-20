@@ -11,6 +11,11 @@ try
 {
   var builder = WebApplication.CreateBuilder(args);
 
+  // Configure Kestrel to use specific ports
+  builder.WebHost.ConfigureKestrel(options => {
+      options.ListenLocalhost(5001, opts => opts.UseHttps());
+  });
+
   builder.Host.UseSerilog((ctx, lc) => lc
       .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
       .Enrich.FromLogContext()
