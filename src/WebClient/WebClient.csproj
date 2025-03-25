@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Authsignal.Server.Client" Version="3.2.0" />
+    <PackageReference Include="Authsignal.Server.Client" Version="3.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6" />
   </ItemGroup>
 
