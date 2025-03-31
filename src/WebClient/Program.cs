@@ -1,11 +1,14 @@
 using System.IdentityModel.Tokens.Jwt;
 using Authsignal;
+using System.Net.Http.Json;
+using System.Net.Security;
+using System.Net.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Kestrel to use specific ports
 builder.WebHost.ConfigureKestrel(options => {
-    options.ListenLocalhost(5002, opts => opts.UseHttps());
+    options.ListenLocalhost(5003, opts => opts.UseHttps());
 });
 
 // Add services to the container.
@@ -32,6 +35,11 @@ builder.Services.AddAuthentication(options =>
       options.Scope.Add("profile");
 
       options.SaveTokens = true;
+      
+      // Disable certificate validation in development
+      options.BackchannelHttpHandler = new HttpClientHandler {
+          ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+      };
     });
 
 builder.Configuration.AddJsonFile("appsettings.json");
@@ -44,7 +52,11 @@ builder.Services.AddSingleton<IAuthsignalClient>(_ => new AuthsignalClient(apiSe
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+  app.UseDeveloperExceptionPage();
+}
+else
 {
   app.UseExceptionHandler("/Error");
   // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.

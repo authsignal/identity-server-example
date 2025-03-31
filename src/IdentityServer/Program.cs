@@ -1,5 +1,12 @@
 ﻿using IdentityServer;
 using Serilog;
+using System.Net;
+
+// Allow untrusted certificates in development
+if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+{
+    ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+}
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
