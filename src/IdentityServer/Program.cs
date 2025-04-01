@@ -1,5 +1,12 @@
 ﻿using IdentityServer;
 using Serilog;
+using System.Net;
+
+// Allow untrusted certificates in development
+if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+{
+    ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+}
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -10,6 +17,11 @@ Log.Information("Starting up");
 try
 {
   var builder = WebApplication.CreateBuilder(args);
+
+  // Configure Kestrel to use specific ports
+  builder.WebHost.ConfigureKestrel(options => {
+      options.ListenLocalhost(5001, opts => opts.UseHttps());
+  });
 
   builder.Host.UseSerilog((ctx, lc) => lc
       .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
